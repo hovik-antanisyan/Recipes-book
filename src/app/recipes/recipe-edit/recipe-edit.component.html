@@ -1,0 +1,57 @@
+<form
+    *ngIf="!isLoading"
+    (ngSubmit)="onSubmit()"
+    class="recipe_form"
+    [formGroup]="recipeForm"
+    fxLayout="column"
+    fxFlex="80">
+  <mat-form-field>
+    <input matInput formControlName="name" placeholder="Name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="description" placeholder="Description">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="imagePath" placeholder="Image path" #imahePath>
+  </mat-form-field>
+  <img [src]="imahePath.value" alt="" style="max-width: 100%">
+  <div formArrayName="ingredients">
+    <div
+        class="ingredients_array"
+        *ngFor="let ingredient of ingredients.controls; let i = index"
+        fxLayout.gt-sm="row"
+        fxLayout.lt-xs="column"
+        fxLayoutGap.gt-sm="15px"
+        [formGroupName]="i">
+      <mat-form-field fxFlex="50%">
+        <input type="text" matInput formControlName="name" class="ing_name" placeholder="Name">
+      </mat-form-field>
+      <mat-form-field fxFlex="calc(50% - 70px)">
+        <input type="number" min="1" matInput formControlName="amount" class="ing_amount" placeholder="Amount">
+      </mat-form-field>
+      <button
+          mat-icon-button
+          fxFlex="40px"
+          fxFlexAlign="center"
+          (click)="deleteIngredient($event, i)"><mat-icon color="warn">cancel</mat-icon>
+      </button>
+      <mat-divider fxShow.gt-sm="false"></mat-divider>
+    </div>
+    <button
+        type="button"
+        class="add_ingredient"
+        mat-icon-button
+        (click)="addIngredient()"
+        color="primary">
+      <mat-icon>add</mat-icon></button>
+  </div>
+  <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      fxFlexAlign="start"
+      [disabled]="recipeForm.touched && recipeForm.invalid">Save
+  </button>
+</form>
+
+<p *ngIf="isLoading">Loading form...</p>

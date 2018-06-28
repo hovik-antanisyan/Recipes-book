@@ -1,0 +1,40 @@
+<div>
+    <mat-toolbar color="primary">
+        <a [routerLink]="['recipes']" mat-button mat-button-icon>
+            <mat-icon>home</mat-icon>
+            <h1 class="home_link">Recipes book</h1>
+        </a>
+        <div fxShow="true" fxHide.lt-sm="true">
+            <a [routerLink]="['/recipes']" routerLinkActive="active" mat-button>Recipes</a>
+            <a [routerLink]="['/shopping-list']" routerLinkActive="active" mat-button>Shopping List</a>
+        </div>
+        <span class="example-spacer"></span>
+        <div fxShow="true" fxHide.lt-sm="true">
+            <a style="cursor: pointer" mat-button appDropdown [matMenuTriggerFor]="menu">
+                <span>Manage</span> <mat-icon>expand_more</mat-icon>
+            </a>
+        </div>
+        <mat-menu #menu="matMenu" [overlapTrigger]="false">
+            <a href="#" mat-menu-item>Save data</a>
+            <a href="#" mat-menu-item>Fetch data</a>
+        </mat-menu>
+        <div fxShow="true" fxHide.gt-xs="true">
+            <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>more_vert</mat-icon></button>
+        </div>
+    </mat-toolbar>
+    <mat-sidenav-container fxFlexFill class="example-container">
+        <mat-sidenav #sidenav fxLayout="column">
+            <div fxLayout="column">
+                <a (click)="sidenav.toggle()" href="#" mat-button>Close</a>
+                <a [routerLink]="['/recipes']" routerLinkActive="active" mat-button>Recipes</a>
+                <a [routerLink]="['/shopping-list']" routerLinkActive="active" mat-button>Shopping List</a>
+                <a href="#" mat-button appDropdown>Manage <mat-icon>expand_more</mat-icon></a>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content fxFlexFill>
+            <div fxLayout="column" class="main-content">
+                <router-outlet></router-outlet>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

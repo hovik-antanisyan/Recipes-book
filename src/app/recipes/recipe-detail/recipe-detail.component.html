@@ -1,0 +1,26 @@
+<div fxFlex="">
+  <img class="recipe-detail-img" [src]="recipe?.imagePath" [alt]="recipe?.name">
+</div>
+<div fxFlex=""><h1>{{ recipe?.name }}</h1>
+</div>
+<div fxFlex="" class="manage-button">
+  <button mat-raised-button color="primary" [matMenuTriggerFor]="manageRecipe">
+    <span>Manage</span> <mat-icon>expand_more</mat-icon>
+  </button>
+  <mat-menu #manageRecipe="matMenu" [overlapTrigger]="false">
+    <button mat-menu-item="" (click)="addToSL()">To shopping list</button>
+    <button mat-menu-item="" (click)="onEditRecipe()">Edit recipe</button>
+    <button mat-menu-item="" (click)="deleteRecipe()">Delete recipe</button>
+  </mat-menu>
+</div>
+<div fxFlex="">
+  {{ recipe?.description }}
+</div>
+<hr>
+<div fxFlex="">
+  <mat-list>
+    <mat-list-item *ngFor="let ingredient of recipe?.ingredients">
+      <a href="#">{{ ingredient.name }} ({{ ingredient.amount }})</a>
+    </mat-list-item>
+  </mat-list>
+</div>

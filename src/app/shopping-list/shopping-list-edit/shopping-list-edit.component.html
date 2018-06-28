@@ -1,0 +1,32 @@
+<div fxLayout="column">
+    <form
+        fxLayout.gt-xs="row wrap"
+        fxLayout.lt-sm="column"
+        fxLayoutGap="20px"
+        [formGroup]="slForm">
+        <mat-form-field fxFlex="75">
+            <input
+                matInput
+                type="text"
+                placeholder="Name"
+                formControlName="name">
+        </mat-form-field>
+        <mat-form-field fxFlex="calc(25% - 40px)">
+            <input
+                matInput
+                type="number"
+                placeholder="Amount"
+                min="1"
+                formControlName="amount">
+        </mat-form-field>
+        <div fxFlex="100" class="ingredient-manage-buttons">
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="addOrUpdateIngredient($event)"
+                [disabled]="slForm.invalid">{{ editMode ? 'Update' : 'Add' }}</button>
+            <button mat-raised-button color="warn" *ngIf="editMode" (click)="deleteIngredient()">Delete</button>
+            <button mat-raised-button color="accent" *ngIf="slForm.dirty || editMode" (click)="resetForm()">Clear</button>
+        </div>
+    </form>
+</div>

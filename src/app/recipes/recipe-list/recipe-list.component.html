@@ -1,0 +1,15 @@
+<div fxLayout="row">
+    <div fxFlex="100">
+        <a [routerLink]="['new']" mat-raised-button color="primary">New recipe</a>
+    </div>
+</div>
+<hr>
+<div fxLayout="row">
+    <div fxFlex="100">
+        <app-recipe-item
+                *ngFor="let recipe of recipes;let index = index;"
+                [recipe]="recipe"
+                [index]="index">
+        </app-recipe-item>
+    </div>
+</div>

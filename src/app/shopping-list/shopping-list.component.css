@@ -1,0 +1,8 @@
+.ingredient-list-item {
+    height: auto !important;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
