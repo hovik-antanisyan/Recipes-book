@@ -28,8 +28,14 @@ export class ShoppingListService {
       }));
   }
 
-  getIngredient(id) {
-    // return this.ingredients.slice().find((item, index) => index === id);
+  onGetIngredient(id) {
+    return this.http.get(`${this.apiUrl}ingredients/${id}`)
+      .pipe(map((response: any) => {
+        return response.ingredient;
+      }))
+      .pipe(catchError((error: HttpErrorResponse) => {
+        return throwError(error);
+      }));
   }
 
   addIngredient(ingredient: Ingredient) {

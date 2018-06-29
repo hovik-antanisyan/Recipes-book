@@ -40,7 +40,7 @@ export class RecipeService {
   onGetRecipeExcept(name: string, id: string, editMode: boolean) {
     return this.http.post(`${this.apiUrl}recipes/except`, {id: editMode ? id : null, name})
       .pipe(map((response: any) => {
-        return response.exists ? {'notUniqueControl': name} : null;
+        return response.exists ? {'notUniqueControl': `Recipe name <b>${name}</b> has already been taken.`} : null;
       }))
       .pipe(catchError((errorResponse) => {
         return throwError(errorResponse.error.message);

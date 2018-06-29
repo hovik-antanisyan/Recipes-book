@@ -30,9 +30,13 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     this.editSubscription = this.slService.startEditing.subscribe((id: number) => {
       this.index = id;
       this.editMode = true;
-      // this.ingredient = this.slService.getIngredient(id);
-      this.ingredient = new Ingredient('sdfsdf', 10);
-      this.slForm.setValue(this.ingredient);
+      this.slService.onGetIngredient(id)
+        .subscribe(
+          (ingredient: Ingredient) => {
+            this.ingredient = ingredient;
+            delete this.ingredient._id;
+            this.slForm.setValue(this.ingredient);
+          });
     });
 
 

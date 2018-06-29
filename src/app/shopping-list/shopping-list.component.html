@@ -3,8 +3,8 @@
         <app-shopping-list-edit></app-shopping-list-edit>
         <hr>
         <mat-list role="list">
-            <mat-list-item role="listitem" *ngFor="let ingredient of ingredients;let id = index;" class="ingredient-list-item">
-                <a href="#" (click)="onSelectIngredient($event, id)">
+            <mat-list-item role="listitem" *ngFor="let ingredient of ingredients" class="ingredient-list-item">
+                <a href="#" (click)="onSelectIngredient($event, ingredient._id)">
                     {{ ingredient?.name }} ({{ ingredient?.amount }})
                 </a>
             </mat-list-item>

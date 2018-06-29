@@ -4,15 +4,24 @@
     class="recipe_form"
     [formGroup]="recipeForm"
     fxLayout="column"
+    #name
     fxFlex="80">
   <mat-form-field>
     <input matInput formControlName="name" placeholder="Name">
+    <mat-error *ngIf="recipeForm.get('name').hasError('required')">
+      Name ir required.
+    </mat-error>
+    <mat-error *ngIf="recipeForm.get('name').hasError('notUniqueControl')" [innerHTML]="recipeForm.get('name').errors['notUniqueControl']">
+    </mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput formControlName="description" placeholder="Description">
+    <textarea matInput formControlName="description" rows="4" placeholder="Description"></textarea>
+    <mat-hint>Description is required.</mat-hint>
+    <mat-error *ngIf="recipeForm.get('description').hasError('required')">Description is required.</mat-error>
   </mat-form-field>
   <mat-form-field>
     <input matInput formControlName="imagePath" placeholder="Image path" #imahePath>
+    <mat-error *ngIf="recipeForm.get('imagePath').hasError('required')">Image path is required.</mat-error>
   </mat-form-field>
   <img [src]="imahePath.value" alt="" style="max-width: 100%">
   <div formArrayName="ingredients">
@@ -25,9 +34,11 @@
         [formGroupName]="i">
       <mat-form-field fxFlex="50%">
         <input type="text" matInput formControlName="name" class="ing_name" placeholder="Name">
+        <mat-error *ngIf="ingredient.get('name').hasError('required')">Ingredient name is required.</mat-error>
       </mat-form-field>
       <mat-form-field fxFlex="calc(50% - 70px)">
         <input type="number" min="1" matInput formControlName="amount" class="ing_amount" placeholder="Amount">
+        <mat-error *ngIf="ingredient.get('amount').hasError('required')">Ingredient amount is required.</mat-error>
       </mat-form-field>
       <button
           mat-icon-button

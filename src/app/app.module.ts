@@ -23,7 +23,7 @@ import {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule, ShowOnDirtyErrorStateMatcher, ErrorStateMatcher
 } from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -34,6 +34,7 @@ import {AppRoutingModule} from './app-routing.module';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import {HttpClientModule} from '@angular/common/http';
+import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
 
 @NgModule({
     declarations: [
@@ -68,7 +69,7 @@ import {HttpClientModule} from '@angular/common/http';
         MatInputModule,
         MatSnackBarModule
     ],
-    providers: [RecipeService, ShoppingListService],
+    providers: [RecipeService, ShoppingListService, {provide: ErrorStateMatcher, useClass: MyErrorStateMatcher}],
     bootstrap: [AppComponent]
 })
 export class AppModule {
