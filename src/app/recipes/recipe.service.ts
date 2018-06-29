@@ -48,7 +48,7 @@ export class RecipeService {
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
-    this.slService.addIngredients(ingredients);
+    return this.slService.onAddIngredients(ingredients);
   }
 
   onEditRecipe(id: string, recipe: Recipe) {

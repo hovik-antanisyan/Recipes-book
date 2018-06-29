@@ -9,11 +9,13 @@ import {catchError, map} from 'rxjs/operators';
 })
 export class ShoppingListService {
 
+  ACTION_TYPES = {add: 1, update: 2, delete: 3};
+
   startEditing = new Subject<number>();
 
   apiUrl = 'http://localhost:3000/';
 
-  ingredientsChanged = new Subject<Ingredient[]>();
+  ingredientsChanged = new Subject<{type: number, ingredient?: Ingredient, ingredients?: Ingredient[]}>();
 
   constructor(private http: HttpClient) {
   }
@@ -23,8 +25,8 @@ export class ShoppingListService {
       .pipe(map((response: any) => {
         return response.ingredients;
       }))
-      .pipe(catchError((error: HttpErrorResponse) => {
-        return throwError(error.message);
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
       }));
   }
 
@@ -33,28 +35,48 @@ export class ShoppingListService {
       .pipe(map((response: any) => {
         return response.ingredient;
       }))
-      .pipe(catchError((error: HttpErrorResponse) => {
-        return throwError(error);
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
       }));
   }
 
-  addIngredient(ingredient: Ingredient) {
-    // this.ingredients.push(ingredient);
-    // this.ingredientsChanged.next(this.ingredients.slice());
+  onAddIngredient(ingredient: Ingredient) {
+    return this.http.post(`${this.apiUrl}ingredients`, ingredient)
+      .pipe(map((response: any) => {
+        return response.ingredient;
+      }))
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
+      }));
   }
 
-  editIngredient(id, ingredient: Ingredient) {
-    // this.ingredients[id] = ingredient;
-    // this.ingredientsChanged.next(this.ingredients.slice());
+  onEditIngredient(id, ingredient: Ingredient) {
+    return this.http.put(`${this.apiUrl}ingredients/${id}/edit`, ingredient)
+      .pipe(map((response: any) => {alert(1);
+        return response.ingredient;
+      }))
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
+      }));
   }
 
-  addIngredients(ingredients: Ingredient[]) {
-    // this.ingredients.push(...ingredients);
-    // this.ingredientsChanged.next(this.ingredients.slice());
+  onAddIngredients(ingredients: Ingredient[]) {
+    return this.http.post(`${this.apiUrl}ingredients/`, ingredients)
+      .pipe(map((response: any) => {
+        return response.ingredients;
+      }))
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
+      }));
   }
 
-  deleteIngredient(id: number) {
-    // this.ingredients.splice(id, 1);
-    // this.ingredientsChanged.next(this.ingredients.slice());
+  onDeleteIngredient(id: number) {
+    return this.http.delete(`${this.apiUrl}ingredients/${id}`)
+      .pipe(map((response: any) => {
+        return response.ingredient;
+      }))
+      .pipe(catchError((errorResponse: HttpErrorResponse) => {
+        return throwError(errorResponse.error.message);
+      }));
   }
 }

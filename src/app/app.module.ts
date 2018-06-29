@@ -12,18 +12,18 @@ import {RecipeItemComponent} from './recipes/recipe-list/recipe-item/recipe-item
 
 import {DropdownDirective} from './shared/dropdown.directive';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import {
-    MatButtonModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSnackBarModule, ShowOnDirtyErrorStateMatcher, ErrorStateMatcher
+  MatButtonModule,
+  MatCheckboxModule,
+  MatMenuModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatListModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSnackBarModule, ShowOnDirtyErrorStateMatcher, ErrorStateMatcher, MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -31,46 +31,58 @@ import {RecipeService} from './recipes/recipe.service';
 import {ShoppingListService} from './shopping-list/shopping-list.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
-import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import {RecipeStartComponent} from './recipes/recipe-start/recipe-start.component';
+import {RecipeEditComponent} from './recipes/recipe-edit/recipe-edit.component';
 import {HttpClientModule} from '@angular/common/http';
 import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        ShoppingListComponent,
-        ShoppingListEditComponent,
-        HeaderComponent,
-        RecipesComponent,
-        RecipeListComponent,
-        RecipeDetailComponent,
-        RecipeItemComponent,
-        DropdownDirective,
-        RecipeStartComponent,
-        RecipeEditComponent,
-    ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatMenuModule,
-        MatToolbarModule,
-        MatSidenavModule,
-        MatListModule,
-        MatIconModule,
-        FlexLayoutModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSnackBarModule
-    ],
-    providers: [RecipeService, ShoppingListService, {provide: ErrorStateMatcher, useClass: MyErrorStateMatcher}],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    ShoppingListComponent,
+    ShoppingListEditComponent,
+    HeaderComponent,
+    RecipesComponent,
+    RecipeListComponent,
+    RecipeDetailComponent,
+    RecipeItemComponent,
+    DropdownDirective,
+    RecipeStartComponent,
+    RecipeEditComponent,
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule
+  ],
+  providers: [
+    RecipeService,
+    ShoppingListService,
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 2000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      }
+    },
+    {provide: ErrorStateMatcher, useClass: MyErrorStateMatcher}
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

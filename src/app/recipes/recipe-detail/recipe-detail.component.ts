@@ -3,6 +3,7 @@ import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
 import {MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Ingredient} from '../../shared/ingredient.model';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -30,23 +31,36 @@ export class RecipeDetailComponent implements OnInit {
               this.recipe = recipe;
             },
             (error: any) => {
-              console.log(error);
+              this.snackBar.open(
+                error,
+                'Ok',
+                {
+                  panelClass: 'error'
+                }
+              );
             });
       }
     );
   }
 
   addToSL() {
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
-    this.snackBar.open(
-      'Ingredients have been added to the Shopping list!',
-      'Ok',
-      {
-        duration: 2000,
-        verticalPosition: 'top',
-        horizontalPosition: 'right'
-      }
-    );
+    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
+      .subscribe(
+        (ingredients: Ingredient[]) => {
+          this.snackBar.open(
+            'Ingredients have been added to the Shopping list.',
+            'Ok'
+          );
+        },
+      (error: any) => {
+        this.snackBar.open(
+          error,
+          'Ok',
+          {
+            panelClass: 'error'
+          }
+        );
+      });
   }
 
   onEditRecipe() {
@@ -64,9 +78,7 @@ export class RecipeDetailComponent implements OnInit {
             error,
             'Ok',
             {
-              duration: 2000,
-              verticalPosition: 'top',
-              horizontalPosition: 'right'
+              panelClass: 'error'
             }
           );
           console.log(error);

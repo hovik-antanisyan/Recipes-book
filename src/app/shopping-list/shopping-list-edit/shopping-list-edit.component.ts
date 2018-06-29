@@ -3,6 +3,7 @@ import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -23,7 +24,10 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
   editSubscription: Subscription;
 
-  constructor(private slService: ShoppingListService, private fb: FormBuilder) {
+  constructor(
+    private slService: ShoppingListService,
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -36,6 +40,16 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
             this.ingredient = ingredient;
             delete this.ingredient._id;
             this.slForm.setValue(this.ingredient);
+          },
+          (error: any) => {
+            this.snackBar.open(
+              error,
+              'Ok',
+              {
+                panelClass: 'error'
+              }
+            );
+            console.log(error);
           });
     });
 
@@ -66,10 +80,40 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   addOrUpdateIngredient(e) {
     e.preventDefault();
     if (this.editMode) {
-      this.slService.editIngredient(this.index, this.slForm.value);
+      this.slService.onEditIngredient(this.index, this.slForm.value)
+        .subscribe(
+          (ingredient: Ingredient) => {
+            this.slService.ingredientsChanged
+              .next({type: this.slService.ACTION_TYPES.update, ingredient});
+          },
+          (error: any) => {
+            this.snackBar.open(
+              error,
+              'Ok',
+              {
+                panelClass: 'error'
+              }
+            );
+          }
+        );
       this.editMode = false;
     } else {
-      this.slService.addIngredient(this.slForm.value);
+      this.slService.onAddIngredient(this.slForm.value)
+        .subscribe(
+          (ingredient: Ingredient) => {
+            this.slService.ingredientsChanged
+              .next({type: this.slService.ACTION_TYPES.add, ingredient});
+          },
+          (error: any) => {
+            this.snackBar.open(
+              error,
+              'Ok',
+              {
+                panelClass: 'error'
+              }
+            );
+          }
+        );
     }
     this.slForm.markAsUntouched();
     this.slForm.markAsPristine();
@@ -80,9 +124,24 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   deleteIngredient() {
     this.editMode = false;
     this.slForm.reset();
-    this.slService.deleteIngredient(this.index);
-    this.slForm.markAsUntouched();
-    this.slForm.markAsPristine();
+    this.slService.onDeleteIngredient(this.index)
+      .subscribe(
+        (ingredient: Ingredient) => {
+          this.slService.ingredientsChanged
+            .next({type: this.slService.ACTION_TYPES.delete, ingredient});
+          this.slForm.markAsUntouched();
+          this.slForm.markAsPristine();
+        },
+        (error: any) => {
+          this.snackBar.open(
+            error,
+            'Ok',
+            {
+              panelClass: 'error'
+            }
+          );
+        }
+      );
   }
 
   resetForm() {
