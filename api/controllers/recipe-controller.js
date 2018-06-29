@@ -9,14 +9,16 @@ module.exports = {
                 .populate('ingredients')
                 .lean();
 
+
+            if (!recipes.length) {
+                return res.status(404).json({success: false, message: 'No recipe found.'});
+            }
+
+
             for (let recipe of recipes) {
                 for (let ingredient of recipe.ingredients) {
                     delete ingredient.__v;
                 }
-            }
-
-            if (!recipes) {
-                return next(new Error('No recipe found.'));
             }
 
             return res.json({success: true, recipes});
@@ -30,10 +32,12 @@ module.exports = {
         const ingredients = [];
 
         try {
-            for (let ingredient of req.body.ingredients) {
-                let newIngredient = new Ingredient(ingredient);
-                newIngredient = await newIngredient.save();
-                ingredients.push(newIngredient);
+            if (req.body.ingredients) {
+                for (let ingredient of req.body.ingredients) {
+                    let newIngredient = new Ingredient(ingredient);
+                    newIngredient = await newIngredient.save();
+                    ingredients.push(newIngredient);
+                }
             }
 
             const recipe = new Recipe({
@@ -42,34 +46,32 @@ module.exports = {
                 imagePath: req.body.imagePath,
                 ingredients: ingredients
             });
-            const newRecipe = await recipe.save();
-            const errors = [];
-            /*const validationErrors = await recipe.validate();
-            console.log('zzzzzzz',validationErrors);*/
-            /*if (validationErrors) {
-                for (const key in validationErrors.errors) {
-                    if (validationErrors.errors.hasOwnProperty(key)) {
-                        errors[key] = validationErrors.errors[key].message;
-                        console.log(validationErrors.errors[key].message);
-                    }
-                }
-                return res.status(400).json({errors, message: 'Validation failed.'});
-            }*/
 
+            const newRecipe = await recipe.save();
 
             return res.json({success: true, recipe: newRecipe});
         } catch (e) {
-            console.log(e);
+            if (e.name === 'ValidationError') {
+                const errors = {};
+                for (const key in e.errors) {
+                    if (e.errors.hasOwnProperty(key)) {
+                        errors[key] = e.errors[key].message;
+                    }
+                }
+                return res.status(400).json({errors: errors, message: 'Validation failed.'});
+            }
+
             next(e);
         }
     },
 
     async getRecipe(req, res, next) {
         try {
-            const recipe = await Recipe
-                .findById(req.params.id)
-                .select({__v: false})
-                .populate('ingredients');
+            const recipe = await
+                Recipe
+                    .findById(req.params.id)
+                    .select({__v: false})
+                    .populate('ingredients');
 
             if (!recipe) {
                 return next(new Error('Document not found.'));
@@ -79,12 +81,14 @@ module.exports = {
         } catch (e) {
             return res.status(500).json({success: false, message: e});
         }
-    },
+    }
+    ,
 
     async getRecipeExcept(req, res, next) {
         try {
-            const recipes = await Recipe
-                .find({name: req.body.name.trim(), _id: {$ne: req.body.id}});
+            const recipes = await
+                Recipe
+                    .find({name: req.body.name.trim(), _id: {$ne: req.body.id}});
 
             if (!recipes) {
                 return next(new Error('Document not found.'));
@@ -94,22 +98,27 @@ module.exports = {
         } catch (e) {
             return res.status(500).json({success: false, error: e.message});
         }
-    },
+    }
+    ,
 
     async updateRecipe(req, res, next) {
         const ingredients = [];
 
         try {
-            for (let ingredient of req.body.ingredients) {
-                let newIngredient = new Ingredient(ingredient);
-                newIngredient = await newIngredient.save();
-                ingredients.push(newIngredient);
+            if (req.body.ingredients) {
+                for (let ingredient of req.body.ingredients) {
+                    let newIngredient = new Ingredient(ingredient);
+                    newIngredient = await
+                        newIngredient.save();
+                    ingredients.push(newIngredient);
+                }
             }
 
             let props = req.body;
             delete props.ingredients;
             props = Object.assign(props, {ingredients});
-            const recipe = await Recipe.findByIdAndUpdate(req.params.id, props, {new: true, rawResult: false});
+            const recipe = await
+                Recipe.findByIdAndUpdate(req.params.id, props, {new: true, rawResult: false});
 
             if (!recipe) {
                 return next(new Error('Document not found.'));
@@ -119,11 +128,13 @@ module.exports = {
         } catch (e) {
             return res.status(500).json({success: false, error: e.message});
         }
-    },
+    }
+    ,
 
     async deleteRecipe(req, res, next) {
         try {
-            const recipe = await Recipe.findByIdAndDelete(req.params.id);
+            const recipe = await
+                Recipe.findByIdAndDelete(req.params.id);
 
             if (!recipe) {
                 return res.json(404, {message: 'Document not found'});
@@ -134,4 +145,5 @@ module.exports = {
             return next(e);
         }
     }
-};
+}
+;

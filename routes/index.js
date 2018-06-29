@@ -20,4 +20,6 @@ router.delete('/recipes/:id', RecipeController.deleteRecipe);
 
 router.get('/ingredients', IngredientController.index);
 
+router.get('/ingredients/:id', IngredientController.getIngredient);
+
 module.exports = router;
