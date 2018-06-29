@@ -22,4 +22,10 @@ router.get('/ingredients', IngredientController.index);
 
 router.get('/ingredients/:id', IngredientController.getIngredient);
 
+router.delete('/ingredients/:id', IngredientController.deleteIngredient);
+
+router.put('/ingredients/:id/edit', IngredientController.updateIngredient);
+
+router.post('/ingredients', IngredientController.addIngredient);
+
 module.exports = router;
