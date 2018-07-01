@@ -1,0 +1,30 @@
+<form
+    [formGroup]="signInForm"
+    (ngSubmit)="onSubmit()"
+    fxLayout="column"
+    fxFlex.gt-xs="70"
+    fxFlex.gt-sm="40"
+    fxFlex.lt-sm="90">
+  <h1>Signin</h1>
+  <mat-form-field>
+    <input type="email" matInput formControlName="email" placeholder="Email">
+    <mat-icon *ngIf="signInForm.get('email').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">email</mat-icon>
+    <mat-error
+        *ngIf="signInForm.get('email').invalid && signInForm.get('email').touched && signInForm.get('email').hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error
+        *ngIf="signInForm.get('email').invalid && signInForm.get('email').touched && signInForm.get('email').hasError('email')">
+      Email must be valid.
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input type="password" matInput formControlName="password" placeholder="Password">
+    <mat-icon *ngIf="signInForm.get('password').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">lock</mat-icon>
+  </mat-form-field>
+  <button mat-raised-button color="primary" fxFlexAlign="start" [disabled]="signInForm.invalid">
+    Submit
+  </button>
+</form>

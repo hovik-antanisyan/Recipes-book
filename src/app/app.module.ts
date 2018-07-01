@@ -2,13 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {ShoppingListComponent} from './shopping-list/shopping-list.component';
-import {ShoppingListEditComponent} from './shopping-list/shopping-list-edit/shopping-list-edit.component';
 import {HeaderComponent} from './header/header.component';
-import {RecipesComponent} from './recipes/recipes.component';
-import {RecipeListComponent} from './recipes/recipe-list/recipe-list.component';
-import {RecipeDetailComponent} from './recipes/recipe-detail/recipe-detail.component';
-import {RecipeItemComponent} from './recipes/recipe-list/recipe-item/recipe-item.component';
 
 import {DropdownDirective} from './shared/dropdown.directive';
 
@@ -23,32 +17,39 @@ import {
   MatIconModule,
   MatFormFieldModule,
   MatInputModule,
-  MatSnackBarModule, ShowOnDirtyErrorStateMatcher, ErrorStateMatcher, MAT_SNACK_BAR_DEFAULT_OPTIONS
+  MatSnackBarModule,
+  ErrorStateMatcher,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RecipeService} from './recipes/recipe.service';
 import {ShoppingListService} from './shopping-list/shopping-list.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
-import {RecipeStartComponent} from './recipes/recipe-start/recipe-start.component';
-import {RecipeEditComponent} from './recipes/recipe-edit/recipe-edit.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
+import { UserComponent } from './user/user.component';
+import { SignupComponent } from './user/signup/signup.component';
+import { SigninComponent } from './user/signin/signin.component';
+import {AuthService} from './user/auth.service';
+import { LogoutComponent } from './user/logout/logout.component';
+import {AuthInterceptor} from './shared/auth/auth-interceptor';
+import {AuthGuard} from './shared/auth/AuthGuard';
+import {RecipeModule} from './recipes/recipe.module';
+import {ShoppingListModule} from './shopping-list/shopping-list.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ShoppingListComponent,
-    ShoppingListEditComponent,
+
     HeaderComponent,
-    RecipesComponent,
-    RecipeListComponent,
-    RecipeDetailComponent,
-    RecipeItemComponent,
+
     DropdownDirective,
-    RecipeStartComponent,
-    RecipeEditComponent,
+
+    UserComponent,
+    SignupComponent,
+    SigninComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +58,8 @@ import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    RecipeModule,
+    ShoppingListModule,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,
@@ -70,8 +73,14 @@ import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
     MatSnackBarModule
   ],
   providers: [
-    RecipeService,
     ShoppingListService,
+    AuthService,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: {
@@ -80,7 +89,10 @@ import {MyErrorStateMatcher} from './shared/my-error-state-matcher';
         horizontalPosition: 'right'
       }
     },
-    {provide: ErrorStateMatcher, useClass: MyErrorStateMatcher}
+    {
+      provide: ErrorStateMatcher,
+      useClass: MyErrorStateMatcher
+    }
   ],
   bootstrap: [AppComponent]
 })

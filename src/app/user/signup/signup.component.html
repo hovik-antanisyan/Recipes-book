@@ -1,0 +1,41 @@
+<form
+    [formGroup]="signUpForm"
+    (ngSubmit)="onSubmit()"
+    fxLayout="column"
+    fxFlex.gt-xs="70"
+    fxFlex.gt-sm="40"
+    fxFlex.lt-sm="90">
+  <h1>Signup</h1>
+  <mat-form-field>
+    <input type="text" matInput formControlName="name" placeholder="Name">
+    <mat-icon *ngIf="signUpForm.get('name').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">person</mat-icon>
+    <mat-error *ngIf="signUpForm.get('name').invalid && signUpForm.get('name').touched">Name is required.</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input type="email" matInput formControlName="email" placeholder="Email">
+    <mat-icon *ngIf="signUpForm.get('email').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">email</mat-icon>
+    <mat-error
+        *ngIf="signUpForm.get('email').invalid && signUpForm.get('email').touched && signUpForm.get('email').hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error
+        [innerHTML]="signUpForm.get('name').errors['notUniqueEmail']"
+        *ngIf="signUpForm.get('email').invalid && signUpForm.get('email').hasError('notUniqueEmail')">
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input type="password" matInput formControlName="password" placeholder="Password">
+    <mat-icon *ngIf="signUpForm.get('password').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">lock</mat-icon>
+  </mat-form-field>
+  <mat-form-field>
+    <input type="password" matInput formControlName="passwordConfirm" placeholder="Password confirm">
+    <mat-icon *ngIf="signUpForm.get('passwordConfirm').valid" matSuffix color="accent">check</mat-icon>
+    <mat-icon matSuffix color="primary">lock</mat-icon>
+  </mat-form-field>
+  <button mat-raised-button color="primary" fxFlexAlign="start" [disabled]="signUpForm.invalid">
+    Submit
+  </button>
+</form>

@@ -3,8 +3,9 @@ import {Injectable} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import {Subject, throwError} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
+import {AuthService} from '../user/auth.service';
 
 @Injectable()
 export class RecipeService {
@@ -14,15 +15,20 @@ export class RecipeService {
 
   recipesChanged = new Subject<boolean>();
 
-  constructor(private slService: ShoppingListService, private http: HttpClient) {
+  constructor(private slService: ShoppingListService, private http: HttpClient, private authService: AuthService) {
   }
 
   onGetRecipes() {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
     return this.http.get(`${this.apiUrl}recipes`)
       .pipe(map((response: any) => {
         return response.recipes;
       }))
       .pipe(catchError((errorResponse) => {
+        console.log(errorResponse);
         return throwError(errorResponse.error.message);
       }));
   }

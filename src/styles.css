@@ -4,3 +4,7 @@
 snack-bar-container.error {
     background-color: #f44336;
 }
+
+snack-bar-container.error .mat-simple-snackbar-action {
+    color: #3f51b5;
+}

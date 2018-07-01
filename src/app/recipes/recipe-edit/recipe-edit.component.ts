@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormArray, Validators, FormControl} from '@angular/forms';
 import {Recipe} from '../recipe.model';
@@ -6,6 +6,7 @@ import {RecipeService} from '../recipe.service';
 import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {Observable} from 'rxjs';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -24,6 +25,7 @@ export class RecipeEditComponent implements OnInit {
               private fb: FormBuilder,
               private recipeSv: RecipeService,
               private router: Router,
+              private snackBar: MatSnackBar,
               private slService: ShoppingListService) {
   }
 
@@ -42,7 +44,13 @@ export class RecipeEditComponent implements OnInit {
                 this.initEditForm();
               },
               (error: any) => {
-                console.log(error);
+                this.snackBar.open(
+                  error,
+                  'Ok',
+                  {
+                    panelClass: 'error'
+                  }
+                );
               });
         }
       }
@@ -117,7 +125,13 @@ export class RecipeEditComponent implements OnInit {
             this.router.navigateByUrl('/recipes');
           },
           (error: any) => {
-            console.log(error);
+            this.snackBar.open(
+              error,
+              'Ok',
+              {
+                panelClass: 'error'
+              }
+            );
           });
     } else {
       this.recipeSv.onAddRecipe(this.recipeForm.value)
@@ -126,7 +140,13 @@ export class RecipeEditComponent implements OnInit {
             this.router.navigateByUrl('/recipes');
           },
           (error: any) => {
-            console.log(error);
+            this.snackBar.open(
+              error,
+              'Ok',
+              {
+                panelClass: 'error'
+              }
+            );
           });
     }
   }

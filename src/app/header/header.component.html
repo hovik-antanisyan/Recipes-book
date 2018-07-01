@@ -10,6 +10,11 @@
         </div>
         <span class="example-spacer"></span>
         <div fxShow="true" fxHide.lt-sm="true">
+            <a style="cursor: pointer" mat-button appDropdown [matMenuTriggerFor]="user">
+                <span>User</span> <mat-icon>expand_more</mat-icon>
+            </a>
+        </div>
+        <div fxShow="true" fxHide.lt-sm="true">
             <a style="cursor: pointer" mat-button appDropdown [matMenuTriggerFor]="menu">
                 <span>Manage</span> <mat-icon>expand_more</mat-icon>
             </a>
@@ -17,6 +22,13 @@
         <mat-menu #menu="matMenu" [overlapTrigger]="false">
             <a href="#" mat-menu-item>Save data</a>
             <a href="#" mat-menu-item>Fetch data</a>
+        </mat-menu>
+        <mat-menu #user="matMenu" [overlapTrigger]="false">
+            <ng-template [ngIf]="!isLoggedIn">
+                <a [routerLink]="['user', 'signin']" mat-menu-item>Signin</a>
+                <a [routerLink]="['user', 'signup']" mat-menu-item>Signup</a>
+            </ng-template>
+            <a [routerLink]="['user', 'logout']" *ngIf="isLoggedIn" mat-menu-item>Logout</a>
         </mat-menu>
         <div fxShow="true" fxHide.gt-xs="true">
             <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>more_vert</mat-icon></button>
