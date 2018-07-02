@@ -35,6 +35,6 @@ router.post('/user/signup', UserController.signup);
 
 router.post('/user/signin', UserController.signin);
 
-router.post('/user/except', AuthCheck, UserController.getUserExcept);
+router.post('/user/except', UserController.getUserExcept);
 
 module.exports = router;
