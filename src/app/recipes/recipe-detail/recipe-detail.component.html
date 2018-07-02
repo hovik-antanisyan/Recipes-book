@@ -4,7 +4,7 @@
 <div fxFlex=""><h1>{{ recipe?.name }}</h1>
 </div>
 <div fxFlex="" class="manage-button">
-  <button mat-raised-button color="primary" [matMenuTriggerFor]="manageRecipe">
+  <button mat-raised-button color="primary" appDropdown [matMenuTriggerFor]="manageRecipe">
     <span>Manage</span> <mat-icon>expand_more</mat-icon>
   </button>
   <mat-menu #manageRecipe="matMenu" [overlapTrigger]="false">

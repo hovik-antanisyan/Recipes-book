@@ -52,7 +52,7 @@ export class ShoppingListService {
 
   onEditIngredient(id, ingredient: Ingredient) {
     return this.http.put(`${this.apiUrl}ingredients/${id}/edit`, ingredient)
-      .pipe(map((response: any) => {alert(1);
+      .pipe(map((response: any) => {
         return response.ingredient;
       }))
       .pipe(catchError((errorResponse: HttpErrorResponse) => {

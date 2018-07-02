@@ -3,7 +3,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {MatSnackBar} from '@angular/material';
-import {User} from '../user.model';
+import {User} from '../auth.model';
 
 @Component({
   selector: 'app-signin',

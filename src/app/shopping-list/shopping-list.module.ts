@@ -22,7 +22,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ShoppingListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,

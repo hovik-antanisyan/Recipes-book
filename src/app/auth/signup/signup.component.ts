@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {Observable} from 'rxjs';
-import {User} from '../user.model';
+import {User} from '../auth.model';
 import {MatSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
 

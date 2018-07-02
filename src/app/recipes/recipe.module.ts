@@ -23,8 +23,8 @@ import {
   MatSnackBarModule,
   MatToolbarModule
 } from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     RecipeRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
+    SharedModule,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,

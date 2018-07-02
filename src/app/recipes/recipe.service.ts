@@ -5,7 +5,7 @@ import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import {Subject, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {AuthService} from '../user/auth.service';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable()
 export class RecipeService {

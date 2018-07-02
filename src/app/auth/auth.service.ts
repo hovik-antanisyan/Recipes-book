@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {User} from './user.model';
+import {User} from './auth.model';
 import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 
@@ -57,6 +57,14 @@ export class AuthService {
 
   getToken() {
     return localStorage.getItem('authToken');
+  }
+
+  getExpireDate() {
+    return localStorage.getItem('authExpiredAt');
+  }
+
+  getExpireInterval() {
+    return Math.floor(((+new Date(this.getExpireDate()) - +new Date())/1000/3600)) + ' hours';
   }
 
   getUserExcept(email: string) {

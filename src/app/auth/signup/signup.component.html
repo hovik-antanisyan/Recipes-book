@@ -21,7 +21,7 @@
       Email is required
     </mat-error>
     <mat-error
-        [innerHTML]="signUpForm.get('name').errors['notUniqueEmail']"
+        [innerHTML]="signUpForm.get('email').errors['notUniqueEmail']"
         *ngIf="signUpForm.get('email').invalid && signUpForm.get('email').hasError('notUniqueEmail')">
     </mat-error>
   </mat-form-field>
