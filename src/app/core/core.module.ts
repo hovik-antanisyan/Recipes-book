@@ -3,6 +3,8 @@ import {HomeComponent} from './home/home.component';
 import {HeaderComponent} from './header/header.component';
 import {AppRoutingModule} from '../app-routing.module';
 import {
+  ErrorStateMatcher,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatButtonModule,
   MatCheckboxModule, MatFormFieldModule, MatIconModule,
   MatInputModule,
@@ -13,6 +15,10 @@ import {
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
+import {AuthService} from '../auth/auth.service';
+import {AuthGuardService} from '../auth/auth-guard.service';
+import {MyErrorStateMatcher} from '../shared/my-error-state-matcher';
+import {ShoppingListService} from '../shopping-list/shopping-list.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +42,24 @@ import {CommonModule} from '@angular/common';
   ],
   exports: [
     AppRoutingModule,
-    HeaderComponent
+    HeaderComponent,
+  ],
+  providers: [
+    ShoppingListService,
+    AuthService,
+    AuthGuardService,
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 2000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      }
+    },
+    {
+      provide: ErrorStateMatcher,
+      useClass: MyErrorStateMatcher
+    }
   ]
 })
 export class CoreModule {}
