@@ -1,9 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Recipe} from '../recipe.model';
-import {RecipeService} from '../recipe.service';
+import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {Recipe} from '../recipe.model';
+import {RecipeService} from '../recipe.service';
 import {Ingredient} from '../../shared/ingredient.model';
+import * as shoppingListActions from '../../shared/state/shopping-list.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -18,6 +20,7 @@ export class RecipeDetailComponent implements OnInit {
   constructor(private recipeService: RecipeService,
               public snackBar: MatSnackBar,
               private router: Router,
+              private store: Store<{shoppingList: {ingredients: Ingredient[]}}>,
               private route: ActivatedRoute) {
   }
 
@@ -44,23 +47,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   addToSL() {
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
-      .subscribe(
-        (ingredients: Ingredient[]) => {
-          this.snackBar.open(
-            'Ingredients have been added to the Shopping list.',
-            'Ok'
-          );
-        },
-      (error: any) => {
-        this.snackBar.open(
-          error,
-          'Ok',
-          {
-            panelClass: 'error'
-          }
-        );
-      });
+    this.store.dispatch(new shoppingListActions.AddIngredients(this.recipe.ingredients));
   }
 
   onEditRecipe() {

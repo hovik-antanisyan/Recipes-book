@@ -1,64 +1,47 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material';
+import {Store} from '@ngrx/store';
+
+import {Subscription} from 'rxjs';
 import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
-import {MatSnackBar} from '@angular/material';
+import * as ShoppingListActions from '../../shared/state/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-list-edit',
   templateUrl: './shopping-list-edit.component.html',
   styleUrls: ['./shopping-list-edit.component.css']
 })
-export class ShoppingListEditComponent implements OnInit, OnDestroy {
-
-  // @ViewChild('nameInput') nameInputRef: ElementRef;
-  // @ViewChild('amountInput') nameAmountRef: ElementRef;
-  ingredient: Ingredient;
-
-  index: number;
+export class ShoppingListEditComponent implements OnInit, OnChanges, OnDestroy {
 
   editMode = false;
-
   slForm: FormGroup;
-
   editSubscription: Subscription;
+  @Input() index: number;
+  @Input() ingredient: Ingredient;
 
   constructor(
     private slService: ShoppingListService,
     private snackBar: MatSnackBar,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>,
     private fb: FormBuilder) {
   }
 
   ngOnInit() {
-    this.editSubscription = this.slService.startEditing.subscribe((id: number) => {
-      this.index = id;
-      this.editMode = true;
-      this.slService.onGetIngredient(id)
-        .subscribe(
-          (ingredient: Ingredient) => {
-            this.ingredient = ingredient;
-            delete this.ingredient._id;
-            this.slForm.setValue(this.ingredient);
-          },
-          (error: any) => {
-            this.snackBar.open(
-              error,
-              'Ok',
-              {
-                panelClass: 'error'
-              }
-            );
-            console.log(error);
-          });
-    });
-
-
-    // this.slService.getIngredients();
     this.slForm = this.fb.group({
       name: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(1)]]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.ingredient) {
+      this.editMode = true;
+      this.ingredient = changes['ingredient'].currentValue;
+      delete this.ingredient._id;
+      this.slForm.setValue(this.ingredient);
+    }
   }
 
   get name() {
@@ -80,68 +63,23 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   addOrUpdateIngredient(e) {
     e.preventDefault();
     if (this.editMode) {
-      this.slService.onEditIngredient(this.index, this.slForm.value)
-        .subscribe(
-          (ingredient: Ingredient) => {
-            this.slService.ingredientsChanged
-              .next({type: this.slService.ACTION_TYPES.update, ingredient});
-          },
-          (error: any) => {
-            this.snackBar.open(
-              error,
-              'Ok',
-              {
-                panelClass: 'error'
-              }
-            );
-          }
-        );
+      this.store.dispatch(new ShoppingListActions.UpdateIngredient({index: this.index, ingredient: this.slForm.value}));
       this.editMode = false;
     } else {
-      this.slService.onAddIngredient(this.slForm.value)
-        .subscribe(
-          (ingredient: Ingredient) => {
-            this.slService.ingredientsChanged
-              .next({type: this.slService.ACTION_TYPES.add, ingredient});
-          },
-          (error: any) => {
-            this.snackBar.open(
-              error,
-              'Ok',
-              {
-                panelClass: 'error'
-              }
-            );
-          }
-        );
+      this.store.dispatch(new ShoppingListActions.AddIngredient(this.slForm.value));
+      this.slForm.markAsUntouched();
+      this.slForm.markAsPristine();
+      this.name = null;
+      this.amount = null;
     }
-    this.slForm.markAsUntouched();
-    this.slForm.markAsPristine();
-    this.name = null;
-    this.amount = null;
   }
 
   deleteIngredient() {
     this.editMode = false;
+    this.store.dispatch(new ShoppingListActions.DeleteIngredient(this.index));
     this.slForm.reset();
-    this.slService.onDeleteIngredient(this.index)
-      .subscribe(
-        (ingredient: Ingredient) => {
-          this.slService.ingredientsChanged
-            .next({type: this.slService.ACTION_TYPES.delete, ingredient});
-          this.slForm.markAsUntouched();
-          this.slForm.markAsPristine();
-        },
-        (error: any) => {
-          this.snackBar.open(
-            error,
-            'Ok',
-            {
-              panelClass: 'error'
-            }
-          );
-        }
-      );
+    this.slForm.markAsUntouched();
+    this.slForm.markAsPristine();
   }
 
   resetForm() {

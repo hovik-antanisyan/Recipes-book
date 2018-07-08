@@ -1,10 +1,15 @@
 <div fxLayout="row">
     <div fxFlex="60">
-        <app-shopping-list-edit></app-shopping-list-edit>
+        <app-shopping-list-edit
+            [ingredient]="selectedIngredient"
+            [index]="selectedIndex"></app-shopping-list-edit>
         <hr>
         <mat-list role="list">
-            <mat-list-item role="listitem" *ngFor="let ingredient of ingredients" class="ingredient-list-item">
-                <a href="#" (click)="onSelectIngredient($event, ingredient._id)">
+            <mat-list-item
+                role="listitem"
+                *ngFor="let ingredient of (shoppingListState | async).ingredients; let i = index"
+                class="ingredient-list-item">
+                <a href="#" (click)="onSelectIngredient($event, i, ingredient)">
                     {{ ingredient?.name }} ({{ ingredient?.amount }})
                 </a>
             </mat-list-item>

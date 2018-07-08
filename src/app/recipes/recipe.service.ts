@@ -1,9 +1,8 @@
 import {Recipe} from './recipe.model';
 import {Injectable} from '@angular/core';
-import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import {Subject, throwError} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
 
@@ -19,10 +18,6 @@ export class RecipeService {
   }
 
   onGetRecipes() {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
     return this.http.get(`${this.apiUrl}recipes`)
       .pipe(map((response: any) => {
         return response.recipes;
@@ -51,10 +46,6 @@ export class RecipeService {
       .pipe(catchError((errorResponse) => {
         return throwError(errorResponse.error.message);
       }));
-  }
-
-  addIngredientsToShoppingList(ingredients: Ingredient[]) {
-    return this.slService.onAddIngredients(ingredients);
   }
 
   onEditRecipe(id: string, recipe: Recipe) {

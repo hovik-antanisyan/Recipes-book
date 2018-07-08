@@ -12,7 +12,7 @@ import {SharedModule} from './shared/shared.module';
 import {AuthModule} from './auth/auth.module';
 import {CoreModule} from './core/core.module';
 import {StoreModule} from '@ngrx/store';
-import {shoppinListReducer} from './shared/state/shopping-list.reducers';
+import {shoppingListReducer} from './shared/state/shopping-list.reducers';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import {shoppinListReducer} from './shared/state/shopping-list.reducers';
     AuthModule,
     CoreModule,
     SharedModule,
-    StoreModule.forRoot({shoppingList: shoppinListReducer})
+    StoreModule.forRoot({shoppingList: shoppingListReducer})
   ],
   providers: [
   ],

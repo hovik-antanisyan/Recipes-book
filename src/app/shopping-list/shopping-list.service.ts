@@ -20,28 +20,8 @@ export class ShoppingListService {
   constructor(private http: HttpClient) {
   }
 
-  onGetIngredients() {
-    return this.http.get(`${this.apiUrl}ingredients`)
-      .pipe(map((response: any) => {
-        return response.ingredients;
-      }))
-      .pipe(catchError((errorResponse: HttpErrorResponse) => {
-        return throwError(errorResponse.error.message);
-      }));
-  }
-
   onGetIngredient(id) {
     return this.http.get(`${this.apiUrl}ingredients/${id}`)
-      .pipe(map((response: any) => {
-        return response.ingredient;
-      }))
-      .pipe(catchError((errorResponse: HttpErrorResponse) => {
-        return throwError(errorResponse.error.message);
-      }));
-  }
-
-  onAddIngredient(ingredient: Ingredient) {
-    return this.http.post(`${this.apiUrl}ingredients`, ingredient)
       .pipe(map((response: any) => {
         return response.ingredient;
       }))
@@ -54,16 +34,6 @@ export class ShoppingListService {
     return this.http.put(`${this.apiUrl}ingredients/${id}/edit`, ingredient)
       .pipe(map((response: any) => {
         return response.ingredient;
-      }))
-      .pipe(catchError((errorResponse: HttpErrorResponse) => {
-        return throwError(errorResponse.error.message);
-      }));
-  }
-
-  onAddIngredients(ingredients: Ingredient[]) {
-    return this.http.post(`${this.apiUrl}ingredients/`, ingredients)
-      .pipe(map((response: any) => {
-        return response.ingredients;
       }))
       .pipe(catchError((errorResponse: HttpErrorResponse) => {
         return throwError(errorResponse.error.message);

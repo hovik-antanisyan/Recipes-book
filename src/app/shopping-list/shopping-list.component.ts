@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from './shopping-list.service';
-import {Subscription} from 'rxjs';
-import {Router} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
 import {MatSnackBar} from '@angular/material';
 
 @Component({
@@ -10,29 +10,25 @@ import {MatSnackBar} from '@angular/material';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit, OnDestroy {
+export class ShoppingListComponent implements OnInit {
 
-  ingredients: Ingredient[] = [];
-
+  shoppingListState: Observable<{ingredients: Ingredient[]}>;
+  selectedIndex: number;
+  selectedIngredient: Ingredient;
   ingChangedSubscription: Subscription;
 
   constructor(
     private slService: ShoppingListService,
     private snackBar: MatSnackBar,
-    private router: Router) {
+    private store: Store<{shoppingList: {ingredients: Ingredient[]}}>) {
   }
 
   ngOnInit() {
-    this.slService.onGetIngredients()
-      .subscribe((ingredients: Ingredient[]) => {
-        this.ingredients = ingredients;
-      });
-
-    this.detectChanges();
+    this.shoppingListState = this.store.select('shoppingList');
   }
 
   detectChanges() {
-    this.ingChangedSubscription = this.slService.ingredientsChanged.subscribe(
+    /*this.ingChangedSubscription = this.slService.ingredientsChanged.subscribe(
       (result: { type: number, ingredient?: Ingredient, ingredients?: Ingredient[] }) => {
         let index;
 
@@ -67,16 +63,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
             );
             break;
         }
-      });
+      });*/
   }
 
-  onSelectIngredient(e, id) {
+  onSelectIngredient(e, id, ingredient) {
     e.preventDefault();
-    this.slService.startEditing.next(id);
-  }
-
-  ngOnDestroy() {
-    this.ingChangedSubscription.unsubscribe();
+    this.selectedIndex = id;
+    this.selectedIngredient = ingredient;
   }
 
 }
