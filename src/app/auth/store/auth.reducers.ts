@@ -21,7 +21,13 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
     case AuthActions.LOGOUT:
       return {
         ...state,
-        authenticated: false
+        authenticated: false,
+        token: null
+      };
+    case AuthActions.SET_TOKEN:
+      return {
+        ...state,
+        token: action.payload
       };
     default:
     return state;

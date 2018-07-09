@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {MatSnackBar} from '@angular/material';
-import * as fromShoppingList from './store/shopping-list.reducers';
 import * as ShoppingListActions from './store/shopping-list.actions';
 import * as fromApp from '../store/app.reducers';
 
@@ -15,7 +14,6 @@ import * as fromApp from '../store/app.reducers';
 export class ShoppingListComponent implements OnInit {
 
   shoppingListState: Observable<{ingredients: Ingredient[]}>;
-  ingChangedSubscription: Subscription;
 
   constructor(
     private snackBar: MatSnackBar,

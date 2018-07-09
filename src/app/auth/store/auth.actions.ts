@@ -18,7 +18,7 @@ export class Logout {
 export class SetToken {
   readonly type = SET_TOKEN;
 
-  constructor(payload: string) {}
+  constructor(public payload: string) {}
 }
 
 export type AuthActions =
