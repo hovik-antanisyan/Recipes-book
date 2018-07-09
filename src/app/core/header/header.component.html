@@ -24,11 +24,11 @@
             <a href="#" mat-menu-item>Fetch data</a>
         </mat-menu>
         <mat-menu #user="matMenu" [overlapTrigger]="false">
-            <ng-template [ngIf]="!isLoggedIn">
+            <ng-template [ngIf]="!(isLoggedIn | async).authenticated">
                 <a [routerLink]="['user', 'signin']" mat-menu-item>Signin</a>
                 <a [routerLink]="['user', 'signup']" mat-menu-item>Signup</a>
             </ng-template>
-            <a [routerLink]="['user', 'logout']" *ngIf="isLoggedIn" mat-menu-item>Logout</a>
+            <a [routerLink]="['user', 'logout']" *ngIf="(isLoggedIn | async).authenticated" mat-menu-item>Logout</a>
         </mat-menu>
         <div fxShow="true" fxHide.gt-xs="true">
             <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>more_vert</mat-icon></button>

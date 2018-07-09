@@ -1,30 +1,42 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+import * as fromApp from '../store/app.reducers';
+import * as fromAuth from './store/auth.reducers';
+import * as AuthActions from './store/auth.actions';
 import {User} from './auth.model';
-import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
   apiUrl = 'http://localhost:3000/';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private store: Store<fromApp.AppState>) {
   }
 
   signup(user: User) {
     return this.http.post(`${this.apiUrl}user/signup`, user)
-      .pipe(map((response: any) => {
-        return response.user;
-      }))
-      .pipe(catchError((errorResponse: HttpErrorResponse) => {
-        return throwError(errorResponse.error.message);
-      }));
+      .pipe(
+        tap((response: any) => {
+          this.store.dispatch(new AuthActions.Signup());
+        }),
+        map((response: any) => {
+          return response.user;
+        }),
+        catchError((errorResponse: HttpErrorResponse) => {
+          return throwError(errorResponse.error.message);
+        }));
   }
 
   signin(email: string, password: string) {
     return this.http.post(`${this.apiUrl}user/signin`, {email, password})
       .pipe(
-        tap(response => this.setSession(response)),
+        tap((response: any) => {
+          this.store.dispatch(new AuthActions.Signin());
+          this.store.dispatch(new AuthActions.SetToken(response.token));
+          // this.setSession(response);
+        }),
         shareReplay(),
         map((response: any) => {
           return response.success;
@@ -37,6 +49,7 @@ export class AuthService {
   }
 
   logout() {
+    this.store.dispatch(new AuthActions.Logout());
     localStorage.removeItem('authToken');
     localStorage.removeItem('authExpiredAt');
   }
@@ -46,14 +59,14 @@ export class AuthService {
     localStorage.setItem('authExpiredAt', authResult.expiresAt);
   }
 
-  isLoggedIn() {
+  /*isLoggedIn() {
     const expiredAt = new Date(localStorage.getItem('authExpiredAt'));
     return new Date() < expiredAt;
   }
 
   isLoggedOut() {
     return !this.isLoggedIn();
-  }
+  }*/
 
   getToken() {
     return localStorage.getItem('authToken');
@@ -64,7 +77,7 @@ export class AuthService {
   }
 
   getExpireInterval() {
-    return Math.floor(((+new Date(this.getExpireDate()) - +new Date())/1000/3600)) + ' hours';
+    return Math.floor(((+new Date(this.getExpireDate()) - +new Date()) / 1000 / 3600)) + ' hours';
   }
 
   getUserExcept(email: string) {

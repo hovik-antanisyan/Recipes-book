@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
-import {ShoppingListService} from './shopping-list.service';
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {MatSnackBar} from '@angular/material';
+import * as fromShoppingList from './store/shopping-list.reducers';
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducers';
 
 @Component({
   selector: 'app-shopping-list',
@@ -13,63 +15,20 @@ import {MatSnackBar} from '@angular/material';
 export class ShoppingListComponent implements OnInit {
 
   shoppingListState: Observable<{ingredients: Ingredient[]}>;
-  selectedIndex: number;
-  selectedIngredient: Ingredient;
   ingChangedSubscription: Subscription;
 
   constructor(
-    private slService: ShoppingListService,
     private snackBar: MatSnackBar,
-    private store: Store<{shoppingList: {ingredients: Ingredient[]}}>) {
+    private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.shoppingListState = this.store.select('shoppingList');
   }
 
-  detectChanges() {
-    /*this.ingChangedSubscription = this.slService.ingredientsChanged.subscribe(
-      (result: { type: number, ingredient?: Ingredient, ingredients?: Ingredient[] }) => {
-        let index;
-
-        switch (result.type) {
-          case this.slService.ACTION_TYPES.add:
-            this.ingredients.splice(0, 0, result.ingredient);
-            this.snackBar.open(
-              'Ingredient added successfully.',
-              'Ok'
-            );
-            break;
-          case this.slService.ACTION_TYPES.delete:
-            index = this.ingredients
-              .findIndex((item) => {
-                return item._id === result.ingredient._id;
-              });
-            this.ingredients.splice(index, 1);
-            this.snackBar.open(
-              'Ingredient deleted successfully.',
-              'Ok'
-            );
-            break;
-          case this.slService.ACTION_TYPES.update:
-            index = this.ingredients
-              .findIndex((item) => {
-                return item._id === result.ingredient._id;
-              });
-            this.ingredients[index] = result.ingredient;
-            this.snackBar.open(
-              'Ingredient updated successfully.',
-              'Ok'
-            );
-            break;
-        }
-      });*/
-  }
-
-  onSelectIngredient(e, id, ingredient) {
+  onSelectIngredient(e, id) {
     e.preventDefault();
-    this.selectedIndex = id;
-    this.selectedIngredient = ingredient;
+    this.store.dispatch(new ShoppingListActions.StartEdit(id));
   }
 
 }

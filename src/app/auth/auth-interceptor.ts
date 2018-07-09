@@ -1,27 +1,32 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {AuthService} from './auth.service';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import * as fromAuth from './store/auth.reducers';
+import * as fromApp from '../store/app.reducers';
+import {switchMap} from 'rxjs/internal/operators';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService) {}
+  constructor(private store: Store<fromApp.AppState>) {
+  }
 
   intercept(req: HttpRequest<any>,
             next: HttpHandler): Observable<HttpEvent<any>> {
-
-    const idToken = this.authService.getToken();
-    if (idToken) {
-      const cloned = req.clone({
-        headers: req.headers.set("Authorization",
-          "Bearer " + idToken)
-      });
-
-      return next.handle(cloned);
-    }
-    else {
-      return next.handle(req);
-    }
+    return this.store.select('auth')
+      .pipe((switchMap(
+        (authState: fromAuth.State) => {
+          const idToken = authState.token;
+          if (idToken) {
+            const cloned = req.clone({
+              headers: req.headers.set('Authorization',
+                `Bearer ${idToken}`)
+            });
+            return next.handle(cloned);
+          } else {
+            return next.handle(req);
+          }
+        })));
   }
 }

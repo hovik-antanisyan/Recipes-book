@@ -3,7 +3,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormArray, Validators, FormControl} from '@angular/forms';
 import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
-import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
