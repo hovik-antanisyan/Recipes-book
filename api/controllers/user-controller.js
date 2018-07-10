@@ -14,7 +14,8 @@ module.exports = {
                 });
                 await user.save();
 
-                return res.json({success: true});
+                this.signin(req, res, next);
+                // return res.json({success: true});
             } else {
                 return res.status(400).json({message: 'Confirm password doesn\'t match password.', success: false});
             }
