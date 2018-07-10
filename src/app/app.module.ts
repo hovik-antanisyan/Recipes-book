@@ -13,6 +13,8 @@ import {AuthModule} from './auth/auth.module';
 import {CoreModule} from './core/core.module';
 import {StoreModule} from '@ngrx/store';
 import {reducers} from './store/app.reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {AuthEffects} from './auth/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import {reducers} from './store/app.reducers';
     AuthModule,
     CoreModule,
     SharedModule,
-    StoreModule.forRoot(reducers)
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
   ],

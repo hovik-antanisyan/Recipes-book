@@ -1,7 +1,16 @@
+import {User} from '../auth.model';
+
+export const TRY_SIGNUP = 'TRY_SIGNUP';
 export const SIGNUP = 'SIGNUP';
 export const SIGNIN = 'SIGNIN';
 export const LOGOUT = 'LOGOUT';
 export const SET_TOKEN = 'SET_TOKEN';
+
+export class TrySignup {
+  readonly type = TRY_SIGNUP;
+
+  constructor(public payload: User) {}
+}
 
 export class Signup {
   readonly type = SIGNUP;
