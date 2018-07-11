@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../auth.service';
 import {MatSnackBar} from '@angular/material';
-import {User} from '../auth.model';
+import {Store} from '@ngrx/store';
+import {AuthService} from '../auth.service';
+import * as fromApp from '../../store/app.reducers';
+import * as fromAuth from '../store/auth.reducers';
+import * as AuthActions from '../store/auth.actions';
+import {take} from 'rxjs/internal/operators';
 
 @Component({
   selector: 'app-signin',
@@ -11,13 +15,13 @@ import {User} from '../auth.model';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  
   signInForm: FormGroup;
   redirectUrl = '/recipes';
 
   constructor(private fb: FormBuilder,
               private snackBar: MatSnackBar,
               private router: Router,
+              private store: Store<fromApp.AppState>,
               private route: ActivatedRoute,
               public authService: AuthService) { }
 
@@ -33,28 +37,21 @@ export class SigninComponent implements OnInit {
           this.redirectUrl = params.back;
         }
       });
-  }
 
-  onSubmit() {
-    this.authService.signin(this.signInForm.value.email, this.signInForm.value.password)
-      .subscribe(
-        (user: User) => {
+    this.store.select('auth')
+      .subscribe((authState: fromAuth.State) => {
+        if (authState.authenticated) {
           this.snackBar.open(
             'You have successfully logined.',
             'OK',
           );
           this.router.navigateByUrl(this.redirectUrl);
-        },
-        (error: any) => {
-          this.snackBar.open(
-            error,
-            'OK',
-            {
-              panelClass: 'error'
-            }
-          );
         }
-      );
+      });
+  }
+
+  onSubmit() {
+    this.store.dispatch(new AuthActions.TrySignin(this.signInForm.value));
   }
 
 }

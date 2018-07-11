@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import * as fromAuth from './store/auth.reducers';
 import * as fromApp from '../store/app.reducers';
 import {Store} from '@ngrx/store';
-import {map, tap} from 'rxjs/internal/operators';
+import {map, take, tap} from 'rxjs/internal/operators';
 
 @Injectable()
 export class AuthGuardService implements CanActivate, CanActivateChild {
@@ -15,6 +15,7 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
               state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.store.select('auth')
       .pipe(
+        take(1),
         map((authState: fromAuth.State) => {
           return authState.authenticated;
         }),

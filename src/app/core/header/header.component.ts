@@ -1,9 +1,9 @@
 import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {AuthService} from '../../auth/auth.service';
-import * as fromApp from '../../store/app.reducers';
-import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import * as fromApp from '../../store/app.reducers';
 import * as fromAuth from '../../auth/store/auth.reducers';
+import * as AuthActions from '../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -16,11 +16,10 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.store.dispatch(new AuthActions.KeepSignedIn());
   }
 
   get isLoggedIn(): Observable<fromAuth.State> {
-    // this.store.select('auth')
-    //   .subscribe(res => {console.log(res); });
     return this.store.select('auth');
   }
 

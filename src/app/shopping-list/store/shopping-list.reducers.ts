@@ -8,16 +8,18 @@ export interface State {
 }
 
 const initialState = {
-  ingredients: [
-    new Ingredient('Apple', 5),
-    new Ingredient('Pineapple', 1),
-  ],
+  ingredients: [],
   editedIngredient: null,
   editedIndex: -1
 };
 
 export function shoppingListReducer(state = initialState, action: ShoppingListActions.ShoppingListActions) {
   switch (action.type) {
+    case ShoppingListActions.GET_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: action.payload
+      };
     case ShoppingListActions.ADD_INGREDIENT:
       return {
         ...state,
