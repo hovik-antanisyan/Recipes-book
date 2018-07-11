@@ -14,6 +14,12 @@ const initialState: State = {
 
 export function authReducer(state = initialState, action: AuthActions.AuthActions) {
   switch (action.type) {
+    /*case AuthActions.KEEP_SIGNED_IN:
+      return {
+        ...state,
+        token: action.payload.token,
+        expiresAt: action.payload.expiresAt,
+      };*/
     case AuthActions.SIGNUP:
     case AuthActions.SIGNIN:
       return {

@@ -1,10 +1,11 @@
 import {Actions, Effect} from '@ngrx/effects';
+import {Injectable} from '@angular/core';
 import * as AuthActions from './auth.actions';
+import * as fromAuth from './auth.reducers';
 import {map, mergeMap, switchMap, tap} from 'rxjs/internal/operators';
 import {User} from '../auth.model';
 import {HttpClient} from '@angular/common/http';
 import {SET_TOKEN} from './auth.actions';
-import {Injectable} from '@angular/core';
 
 @Injectable()
 export class AuthEffects {
@@ -60,6 +61,16 @@ export class AuthEffects {
           ];
         }
       )
+    );
+
+  @Effect({dispatch: false})
+  logout = this.actions$
+    .ofType(AuthActions.LOGOUT)
+    .pipe(
+      tap((state: AuthActions.Logout) => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authExpiresAt');
+      })
     );
 
   @Effect()

@@ -21,10 +21,12 @@ import {
   MatMenuModule,
   MatSidenavModule,
   MatSnackBarModule,
-  MatToolbarModule
+  MatToolbarModule,
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SharedModule} from '../shared/shared.module';
+import {StoreModule} from '@ngrx/store';
+import {recipeReducers} from './store/recipe.reducers';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import {SharedModule} from '../shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    StoreModule.forFeature('recipes', recipeReducers),
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,
