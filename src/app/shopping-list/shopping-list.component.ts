@@ -21,7 +21,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(new ShoppingListActions.TryGetIngredients());
+    this.store.dispatch(new ShoppingListActions.TrySetIngredients());
     this.shoppingListState = this.store.select('shoppingList');
   }
 

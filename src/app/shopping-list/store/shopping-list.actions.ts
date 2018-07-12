@@ -2,20 +2,20 @@ import {Action} from '@ngrx/store';
 import {Ingredient} from '../../shared/ingredient.model';
 
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
-export const GET_INGREDIENTS = 'GET_INGREDIENTS';
-export const TRY_GET_INGREDIENTS = 'TRY_GET_INGREDIENTS';
+export const SET_INGREDIENTS = 'SET_INGREDIENTS';
+export const TRY_SET_INGREDIENTS = 'TRY_SET_INGREDIENTS';
 export const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
 export const UPDATE_INGREDIENT = 'UPDATE_INGREDIENT';
 export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
 export const START_EDIT = 'START_EDIT';
 export const STOP_EDIT = 'STOP_EDIT';
 
-export class TryGetIngredients {
-  readonly type = TRY_GET_INGREDIENTS;
+export class TrySetIngredients {
+  readonly type = TRY_SET_INGREDIENTS;
 }
 
-export class GetIngredients {
-  readonly type = GET_INGREDIENTS;
+export class SetIngredients {
+  readonly type = SET_INGREDIENTS;
 
   constructor(public payload: Ingredient[]) {}
 }
@@ -59,5 +59,5 @@ export type ShoppingListActions =
   DeleteIngredient |
   StartEdit |
   StopEdit |
-  TryGetIngredients |
-  GetIngredients;
+  TrySetIngredients |
+  SetIngredients;

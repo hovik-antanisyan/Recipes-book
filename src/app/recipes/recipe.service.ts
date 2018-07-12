@@ -17,17 +17,6 @@ export class RecipeService {
   constructor(private slService: ShoppingListService, private http: HttpClient, private authService: AuthService) {
   }
 
-  onGetRecipes() {
-    return this.http.get(`${this.apiUrl}recipes`)
-      .pipe(map((response: any) => {
-        return response.recipes;
-      }))
-      .pipe(catchError((errorResponse) => {
-        console.log(errorResponse);
-        return throwError(errorResponse.error.message);
-      }));
-  }
-
   onGetRecipe(id: string) {
     return this.http.get(`${this.apiUrl}recipes/${id}`)
       .pipe(map((response: any) => {

@@ -11,17 +11,17 @@ export class ShoppingListEffects {
 
   @Effect()
   loadIngredients = this.actions$
-    .ofType(ShoppingListActions.TRY_GET_INGREDIENTS)
+    .ofType(ShoppingListActions.TRY_SET_INGREDIENTS)
     .pipe(
       switchMap(
-        (action: ShoppingListActions.TryGetIngredients) => {
+        (action: ShoppingListActions.TrySetIngredients) => {
           return this.http.get(this.apiUrl);
         }
       ),
       mergeMap(
         (response: any) => {
           return [
-            {type: ShoppingListActions.GET_INGREDIENTS, payload: response.ingredients}
+            {type: ShoppingListActions.SET_INGREDIENTS, payload: response.ingredients}
           ];
         }
       )

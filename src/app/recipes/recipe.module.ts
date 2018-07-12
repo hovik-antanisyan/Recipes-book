@@ -27,6 +27,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {SharedModule} from '../shared/shared.module';
 import {StoreModule} from '@ngrx/store';
 import {recipeReducers} from './store/recipe.reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {RecipeEffects} from './store/recipe.effects';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import {recipeReducers} from './store/recipe.reducers';
     ReactiveFormsModule,
     SharedModule,
     StoreModule.forFeature('recipes', recipeReducers),
+    EffectsModule.forFeature([RecipeEffects]),
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,

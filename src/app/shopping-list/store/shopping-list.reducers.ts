@@ -15,7 +15,7 @@ const initialState = {
 
 export function shoppingListReducer(state = initialState, action: ShoppingListActions.ShoppingListActions) {
   switch (action.type) {
-    case ShoppingListActions.GET_INGREDIENTS:
+    case ShoppingListActions.SET_INGREDIENTS:
       return {
         ...state,
         ingredients: action.payload

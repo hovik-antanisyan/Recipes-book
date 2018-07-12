@@ -7,7 +7,7 @@
 <div fxLayout="row">
     <div fxFlex="100">
         <app-recipe-item
-                *ngFor="let recipe of recipes;let index = index;"
+                *ngFor="let recipe of (recipesState | async).recipes;let index = index;"
                 [recipe]="recipe"
                 [index]="index">
         </app-recipe-item>
