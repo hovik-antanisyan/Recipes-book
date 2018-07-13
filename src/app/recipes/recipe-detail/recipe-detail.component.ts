@@ -5,8 +5,9 @@ import {Store} from '@ngrx/store';
 import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
 import * as shoppingListActions from '../../shopping-list/store/shopping-list.actions';
-import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducers';
+import * as fromRecipe from '../store/recipe.reducers';
 import * as fromApp from '../../store/app.reducers';
+import * as RecipeActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -21,7 +22,7 @@ export class RecipeDetailComponent implements OnInit {
   constructor(private recipeService: RecipeService,
               public snackBar: MatSnackBar,
               private router: Router,
-              private store: Store<fromApp.AppState>,
+              private store: Store<fromRecipe.State>,
               private route: ActivatedRoute) {
   }
 
@@ -56,21 +57,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   deleteRecipe() {
-    this.recipeService.onDeleteRecipe(this.id)
-      .subscribe(
-        (recipe: Recipe) => {
-            this.router.navigate(['/recipes']);
-        },
-        (error: any) => {
-          this.snackBar.open(
-            error,
-            'Ok',
-            {
-              panelClass: 'error'
-            }
-          );
-          console.log(error);
-        });
+    this.store.dispatch(new RecipeActions.DeleteRecipe(this.id));
   }
 
 }

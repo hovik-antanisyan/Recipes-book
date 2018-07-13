@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormArray, Validators, FormControl} from '@angular/forms';
+import {MatSnackBar} from '@angular/material';
+import {Store} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
 import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
-import {ShoppingListService} from '../../shopping-list/shopping-list.service';
-import {Observable} from 'rxjs';
-import {MatSnackBar} from '@angular/material';
+import * as fromRecipe from '../store/recipe.reducers';
+import * as RecipeActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -25,7 +28,7 @@ export class RecipeEditComponent implements OnInit {
               private recipeSv: RecipeService,
               private router: Router,
               private snackBar: MatSnackBar,
-              private slService: ShoppingListService) {
+              private store: Store<fromRecipe.FeatureState>) {
   }
 
   ngOnInit() {
@@ -33,32 +36,23 @@ export class RecipeEditComponent implements OnInit {
       (params: Params) => {
         this.id = params.id;
         this.editMode = null != params.id;
-        if (this.editMode) {
-          this.recipeSv.onGetRecipe(this.id)
-            .subscribe(
-              (recipe: Recipe) => {
-                this.recipe = recipe;
-
-                this.isLoading = false;
-                this.initEditForm();
-              },
-              (error: any) => {
-                this.snackBar.open(
-                  error,
-                  'Ok',
-                  {
-                    panelClass: 'error'
-                  }
-                );
-              });
-        }
+        this.store.select('recipes')
+          .subscribe((state: fromRecipe.State) => {
+              this.recipe = state.recipes.find((item) => item._id === this.id);
+              this.isLoading = state.loading;
+              if (state.loaded) {
+                if (this.editMode) {
+                  this.initEditForm();
+                } else if (!this.editMode) {
+                  this.initCreateForm();
+                }
+              }
+            }
+          );
       }
     );
 
-    if (!this.editMode) {
-      this.isLoading = false;
-      this.initCreateForm();
-    }
+
   }
 
   initCreateForm() {
@@ -92,9 +86,8 @@ export class RecipeEditComponent implements OnInit {
     return this.recipeSv.onGetRecipeExcept(control.value, this.id, this.editMode);
   }
 
-  deleteIngredient(e, id) {
-    e.target.closest('.ingredients_array').remove();
-    this.ingredients.removeAt(id);
+  deleteIngredient(id) {
+    // this.store.dispatch(new RecipeActions.DeleteRecipe(id));
   }
 
   get ingredients(): FormArray {
@@ -118,22 +111,10 @@ export class RecipeEditComponent implements OnInit {
 
   onSubmit() {
     if (this.editMode) {
-      this.recipeSv.onEditRecipe(this.id, this.recipeForm.value)
-        .subscribe(
-          (response: any) => {
-            this.router.navigateByUrl('/recipes');
-          },
-          (error: any) => {
-            this.snackBar.open(
-              error,
-              'Ok',
-              {
-                panelClass: 'error'
-              }
-            );
-          });
+      this.store.dispatch(new RecipeActions.UpdateRecipe({recipe: {...this.recipeForm.value, _id: this.id}, _id: this.id}));
     } else {
-      this.recipeSv.onAddRecipe(this.recipeForm.value)
+      this.store.dispatch(new RecipeActions.TryAddRecipe({...this.recipeForm.value}));
+      /*this.recipeSv.onAddRecipe(this.recipeForm.value)
         .subscribe(
           (response: any) => {
             this.router.navigateByUrl('/recipes');
@@ -146,7 +127,7 @@ export class RecipeEditComponent implements OnInit {
                 panelClass: 'error'
               }
             );
-          });
+          });*/
     }
   }
 
