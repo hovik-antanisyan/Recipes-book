@@ -32,3 +32,12 @@
 .list_item.active * {
     color: #fff;
 }
+
+mat-card {
+    margin-bottom: 15px;
+}
+
+mat-card * {
+    color: initial;
+    text-decoration: none;
+}

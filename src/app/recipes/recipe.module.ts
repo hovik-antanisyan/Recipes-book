@@ -22,6 +22,7 @@ import {
   MatSidenavModule,
   MatSnackBarModule,
   MatToolbarModule,
+  MatCardModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SharedModule} from '../shared/shared.module';
@@ -57,7 +58,8 @@ import {RecipeEffects} from './store/recipe.effects';
     FlexLayoutModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule
   ],
   providers: [RecipeService,
     {

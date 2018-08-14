@@ -87,7 +87,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   deleteIngredient(id) {
-    // this.store.dispatch(new RecipeActions.DeleteRecipe(id));
+    this.ingredients.removeAt(id);
   }
 
   get ingredients(): FormArray {

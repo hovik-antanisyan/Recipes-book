@@ -1,15 +1,16 @@
 <div fxLayout="row">
-    <div fxFlex="100">
-        <a [routerLink]="['new']" mat-raised-button color="primary">New recipe</a>
-    </div>
+  <div fxFlex="100">
+    <a [routerLink]="['new']" mat-raised-button color="primary">New recipe</a>
+  </div>
 </div>
 <hr>
-<div fxLayout="row">
-    <div fxFlex="100">
-        <app-recipe-item
-                *ngFor="let recipe of (recipesState | async).recipes;let index = index;"
-                [recipe]="recipe"
-                [index]="index">
-        </app-recipe-item>
-    </div>
+<div fxLayout="row wrap" fxLayoutAlign="space-evenly">
+  <app-recipe-item
+      fxFlex.gt-sm="30"
+      fxFlex.gt-xs="48"
+      fxFlex.xs="90"
+      *ngFor="let recipe of (recipesState | async).recipes;let index = index;"
+      [recipe]="recipe"
+      [index]="index">
+  </app-recipe-item>
 </div>
